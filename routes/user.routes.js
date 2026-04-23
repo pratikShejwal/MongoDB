@@ -1,6 +1,7 @@
 import express from 'express'
 import {User} from '../models/user.model.js'
 import {randomBytes, createHmac} from 'node:crypto'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
@@ -28,5 +29,40 @@ router.post('/signup',async(req,res)=>{
     return res.status(201).json({MEssage:'User cReated', id: user._id})
     
 })
+
+router.post('/login', async(req,res)=>{
+    const {email,password} = req.body
+    const existUser = await User.findOne({
+        email,
+    })
+
+    if (!existUser) {
+        res.status(404).json({Error: "User not found"})
+    }
+
+    const esalt = existUser.salt
+    const hashedPassword = existUser.password
+
+     const newHash = createHmac('sha256',esalt)
+    .update(password).digest('hex')
+
+    if (hashedPassword !== newHash) {
+        res.status(404).json({Error:"failed"})
+    }
+
+    const payload = {
+        _id: existUser._id,
+        name: existUser.name,
+        email: existUser.email
+    }
+
+    const token  =  jwt.sign(payload,process.env.JWT_SECRET)
+
+    return res.status(200).json({
+        message: "successful", token
+    })
+
+})
+
 
 export default router
