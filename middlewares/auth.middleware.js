@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
+
 /**
  * 
  * @param {import('express').Request} req 
