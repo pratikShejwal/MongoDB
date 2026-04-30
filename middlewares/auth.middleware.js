@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 
+
 /**
  * 
  * @param {import('express').Request} req 
@@ -8,6 +9,7 @@ import 'dotenv/config'
  * @param {import('express').Response} res 
  * @returns 
  */
+
 
 export const authMiddleWare = async (req,res,next) =>{
 
